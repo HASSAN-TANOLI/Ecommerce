@@ -1,28 +1,37 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { useProductContext } from "../../context/ProductContext";
+import { useNavigate } from "react-router-dom";
+
 export default function Home() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+      slidesToSlide: 1, // Number of slides to move on arrow click
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+      slidesToSlide: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      slidesToSlide: 1,
+    },
   };
 
-  const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-        console.log(data);
-      });
-  }, []);
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const { products, setProduct } = useProductContext();
 
   return (
     <div className="mx-auto w-full max-w-7xl">
@@ -61,21 +70,17 @@ export default function Home() {
           />
         </div>
       </aside>
-
       {/* category slider will be started from here */}
-      <div className="flex flex-row gap-5 mx-auto w-full max-w-7xl flex-wrap">
-        <Slider {...settings}>
-          {data.map((product) => (
+      <div className="container mx-auto my-8 overflow-hidden">
+        <Carousel responsive={responsive}>
+          {products.map((product) => (
             <div
               key={product.id}
-              className="relative m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
+              className="relative flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
             >
-              <a
-                className="relative mx-3 mt-3 block h-60 overflow-hidden rounded-xl"
-                href="#"
-              >
+              <a className="relative block h-60 overflow-hidden rounded-xl">
                 <img
-                  className="object-cover"
+                  className="object-cover w-full h-full"
                   src={product.image} // replace with the actual image URL from your product data
                   alt="product image"
                 />
@@ -83,7 +88,7 @@ export default function Home() {
               <div className="mt-4 px-5 pb-5">
                 <a href="#">
                   <h5 className="text-xl tracking-tight text-slate-900">
-                    {product.name}
+                    {product.title}
                   </h5>
                 </a>
                 <div className="mt-2 mb-5 flex items-center justify-between">
@@ -112,30 +117,27 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </Slider>
+        </Carousel>
       </div>
-
       {/* card code started from here */}
       <div className="flex flex-row gap-5 mx-auto w-full max-w-7xl flex-wrap">
-        {data.map((product) => (
+        {products.map((product) => (
           <div
             key={product.id}
             className="relative m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
           >
-            <a
-              className="relative mx-3 mt-3 block h-60 overflow-hidden rounded-xl"
-              href="#"
-            >
+            <a className="relative mx-3 mt-3 block h-60 overflow-hidden rounded-xl cursor-pointer">
               <img
                 className="object-cover"
                 src={product.image} // replace with the actual image URL from your product data
                 alt="product image"
+                onClick={() => handleProductClick(product.id)}
               />
             </a>
             <div className="mt-4 px-5 pb-5">
               <a href="#">
                 <h5 className="text-xl tracking-tight text-slate-900">
-                  {product.name}
+                  {product.title}
                 </h5>
               </a>
               <div className="mt-2 mb-5 flex items-center justify-between">
