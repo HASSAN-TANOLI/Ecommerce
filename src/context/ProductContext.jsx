@@ -13,15 +13,14 @@ export const ProductProvider = ({ children }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    // Fetch products and setProducts here
     fetch("https://fakestoreapi.com/products")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching products:", error));
-  }, []); // Empty dependency array ensures it runs only once on mount
+  }, []);
 
   // Function to fetch a single product by ID
-  const fetchProductById = async (productId) => {
+  const fetchProductById = async (productId, setSelectedProduct) => {
     try {
       const response = await fetch(
         `https://fakestoreapi.com/products/${productId}`
@@ -31,6 +30,7 @@ export const ProductProvider = ({ children }) => {
       }
       const data = await response.json();
       setSelectedProduct(data);
+      console.log(selectedProduct);
     } catch (error) {
       console.error("Error fetching selected product:", error);
     }
@@ -38,7 +38,12 @@ export const ProductProvider = ({ children }) => {
 
   return (
     <ProductContext.Provider
-      value={{ products, selectedProduct, fetchProductById }}
+      value={{
+        products,
+        selectedProduct,
+        fetchProductById,
+        setSelectedProduct,
+      }}
     >
       {children}
     </ProductContext.Provider>
