@@ -4,7 +4,21 @@ import { useProductContext } from "../../context/ProductContext";
 import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const [quantityInput, setQuantityInput] = useState(null);
+  const [quantityInput, setQuantityInput] = useState();
+  const [count, setCount] = useState(1);
+  const [totalPrice, setTotalPrice] = useState();
+
+  const plusQuantity = () => {
+    setCount((prevCount) => prevCount + 1);
+    console.log(count);
+  };
+
+  const minusQuantity = () => {
+    if (count > 1) {
+      setCount((prevCount) => prevCount - 1);
+      console.log(count);
+    }
+  };
 
   const { selectedProduct, fetchProductById, setSelectedProduct } =
     useProductContext();
@@ -12,6 +26,12 @@ const ProductDetail = () => {
   useEffect(() => {
     fetchProductById(productId, setSelectedProduct);
   }, [productId]);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      setTotalPrice(count * selectedProduct.price);
+    }
+  }, [count, selectedProduct]);
 
   return (
     <>
@@ -71,13 +91,23 @@ const ProductDetail = () => {
 
             <div className="flex flex-col md:flex-row justify-start gap-20 md:items-center py-5">
               <div className="flex flex-row gap-5 justify-center items-center border border-gray-500 py-1 px-5 rounded-lg">
-                <span className="text-4xl font-bold">-</span>
+                <span
+                  className="text-4xl font-bold cursor-pointer"
+                  onClick={minusQuantity}
+                >
+                  -
+                </span>
                 <input
-                  className="max-w-10 border border-gray-100  mt-2 text-center text-xl"
+                  className="max-w-10 border border-gray-100  mt-2 text-center text-xl cursor-pointer"
                   type="text"
-                  value={quantityInput}
+                  value={count}
                 />
-                <span className="text-4xl font-bold">+</span>
+                <span
+                  className="text-4xl font-bold cursor-pointer"
+                  onClick={plusQuantity}
+                >
+                  +
+                </span>
               </div>
 
               <div>
@@ -87,6 +117,9 @@ const ProductDetail = () => {
                 </button>
               </div>
             </div>
+            <h2 className="text-xl font-bold font-serif text-start py-4">
+              Total Price: <span>{totalPrice ? totalPrice.toFixed(2) : 0}</span>
+            </h2>
           </div>
         </div>
       ) : (
