@@ -1,22 +1,38 @@
 // ProductDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useProductContext } from "../../context/ProductContext";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const [quantityInput, setQuantityInput] = useState();
+  const [quantity, setQuantity] = useState(1);
+  const [cart, setCart] = useState([]);
   const [count, setCount] = useState(1);
   const [totalPrice, setTotalPrice] = useState();
 
+  const { addToCart } = useProductContext();
+
+  const handleQuantityChange = (e) => {
+    setQuantity(parseInt(e.target.value));
+    console.log("Quantity changed:", quantity);
+  };
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      const productToAdd = { ...selectedProduct };
+      addToCart(productToAdd);
+    }
+    console.log("Products added to cart:", quantity);
+  };
+
   const plusQuantity = () => {
-    setCount((prevCount) => prevCount + 1);
-    console.log(count);
+    setQuantity((prevQuantity) => prevQuantity + 1);
+    console.log("Quantity increased:", quantity);
   };
 
   const minusQuantity = () => {
-    if (count > 1) {
-      setCount((prevCount) => prevCount - 1);
-      console.log(count);
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+      console.log("Quantity decreased:", quantity);
     }
   };
 
@@ -29,9 +45,9 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (selectedProduct) {
-      setTotalPrice(count * selectedProduct.price);
+      setTotalPrice(quantity * selectedProduct.price);
     }
-  }, [count, selectedProduct]);
+  }, [quantity, selectedProduct]);
 
   return (
     <>
@@ -42,7 +58,7 @@ const ProductDetail = () => {
           </div>
 
           <div className="w-3/6 py-3">
-            <h1 className="text-start text-2xl md:text-5xl leading-6 md:leading-relaxed font-bold font-serif">
+            <h1 className="text-start text-2xl md:text-5xl leading-6 md:leading-normal font-bold font-serif">
               {selectedProduct.title}
             </h1>
 
@@ -81,7 +97,7 @@ const ProductDetail = () => {
               {" "}
               Price:{" "}
               <span className="text-2xl md:text-3xl">
-                {selectedProduct.price}{" "}
+                ${selectedProduct.price}{" "}
               </span>
             </h3>
 
@@ -99,8 +115,9 @@ const ProductDetail = () => {
                 </span>
                 <input
                   className="max-w-10 border border-gray-100  mt-2 text-center text-xl cursor-pointer"
-                  type="text"
-                  value={count}
+                  type="number"
+                  value={quantity}
+                  onChange={handleQuantityChange}
                 />
                 <span
                   className="text-4xl font-bold cursor-pointer"
@@ -111,14 +128,18 @@ const ProductDetail = () => {
               </div>
 
               <div>
-                <button className="text-xl font-bold border border-gray-500 py-1 px-5 rounded-lg">
+                <button
+                  className="text-xl font-bold border border-gray-500 py-1 px-5 rounded-lg"
+                  onClick={handleAddToCart}
+                >
                   {" "}
                   Add to cart{" "}
                 </button>
               </div>
             </div>
             <h2 className="text-xl font-bold font-serif text-start py-4">
-              Total Price: <span>{totalPrice ? totalPrice.toFixed(2) : 0}</span>
+              Total Price:{" "}
+              <span>${totalPrice ? totalPrice.toFixed(2) : 0}</span>
             </h2>
           </div>
         </div>

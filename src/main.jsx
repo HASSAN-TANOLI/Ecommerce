@@ -14,6 +14,7 @@ import Contact from "./components/Contact/Contact.jsx";
 import User from "./components/User/User.jsx";
 import Github, { githubInfoLoader } from "./components/Github/Github.jsx";
 import ProductDetail from "./components/ProductDetail/ProductDetail.jsx";
+import Cart from "./components/Cart/Cart";
 
 import { ProductProvider } from "./context/ProductContext";
 
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
       <Route path="product/:productId" element={<ProductDetail />} />
       <Route path="user/:userid" element={<User />} />
       <Route loader={githubInfoLoader} path="github" element={<Github />} />
+      <Route path="cart" element={<Cart />} />
     </Route>
   )
 );

@@ -11,6 +11,20 @@ export const useProductContext = () => {
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [cart, setCart] = useState("");
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+    console.log(cart);
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter((item) => item.id !== productId));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
@@ -43,6 +57,9 @@ export const ProductProvider = ({ children }) => {
         selectedProduct,
         fetchProductById,
         setSelectedProduct,
+        addToCart,
+        removeFromCart,
+        clearCart,
       }}
     >
       {children}
