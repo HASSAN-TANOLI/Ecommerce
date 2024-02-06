@@ -16,7 +16,7 @@ const Cart = () => {
                     #
                   </th>
                   <th scope="col" className="px-6 py-4">
-                    Product Name
+                    {cart.title}
                   </th>
                   <th scope="col" className="px-6 py-4">
                     Quantity

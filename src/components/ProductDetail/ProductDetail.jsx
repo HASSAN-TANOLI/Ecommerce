@@ -17,11 +17,9 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      const productToAdd = { ...selectedProduct };
-      addToCart(productToAdd);
-    }
-    console.log("Products added to cart:", quantity);
+    const productToAdd = { ...selectedProduct, quantity };
+    addToCart(productToAdd);
+    console.log("Product added to cart:", productToAdd);
   };
 
   const plusQuantity = () => {

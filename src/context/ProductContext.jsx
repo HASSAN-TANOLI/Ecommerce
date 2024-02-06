@@ -11,12 +11,20 @@ export const useProductContext = () => {
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cart, setCart] = useState("");
-
+  const [cart, setCart] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(1);
   const addToCart = (product) => {
+    // Update the cart with the new product
     setCart([...cart, product]);
-    console.log(cart);
+    // Update the total quantity
+    setTotalQuantity(
+      (prevTotalQuantity) => prevTotalQuantity + product.quantity
+    );
   };
+
+  useEffect(() => {
+    console.log(cart);
+  }, [cart]);
 
   const removeFromCart = (productId) => {
     setCart(cart.filter((item) => item.id !== productId));
@@ -53,8 +61,10 @@ export const ProductProvider = ({ children }) => {
   return (
     <ProductContext.Provider
       value={{
+        totalQuantity,
         products,
         selectedProduct,
+        cart,
         fetchProductById,
         setSelectedProduct,
         addToCart,

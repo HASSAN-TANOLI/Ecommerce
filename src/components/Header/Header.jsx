@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useProductContext } from "../../context/ProductContext";
 
 export default function Header() {
-  const { quantity } = useProductContext();
+  const { totalQuantity } = useProductContext();
   return (
     <header className="shadow sticky z-50 top-0">
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-5">
@@ -36,9 +36,9 @@ export default function Header() {
                         {" "}
                       </p>
                     )} */}
-                    <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-white">
+                    <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-black">
                       {" "}
-                      {quantity}{" "}
+                      {totalQuantity}{" "}
                     </p>
                   </div>
                   <svg
